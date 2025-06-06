@@ -45,4 +45,4 @@ nvim
 ➕ Automatically config stores LSPs for programming languages such as: Lua, C, C++, Python, JavaScript, TypeScript, Rust.
 
 ❗ You can edit the languages used in the file ``` /lua/plugins/lsp.lua ```
-
+✅ You can also use the ``` Mason ``` to change the language settings
