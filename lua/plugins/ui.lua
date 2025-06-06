@@ -64,12 +64,11 @@ return {
                     "                    AquaCode                   ",
                   },
           shortcut = {
-            { desc = "📝 New file", group = "Label", action = "ene | startinsert", key = "e" },
-            { desc = "📂 File Explorer", group = "Label", action = "NvimTreeToggle", key = "<leader>e" },
-            { desc = "🔍 Find Files", group = "Label", action = "Telescope find_files", key = "<leader>ff" },
-            { desc = "💾 Save File", group = "Label", action = "w", key = "<C-s>" },
-            { desc = "🗑️ Close Buffer", group = "Label", action = "bd", key = "<leader>c" },
-            { desc = "🖱️ Select All", group = "Label", action = "ggVG", key = "<C-a>" },
+            { desc = "📂 File Explorer", group = "Label", action = "NvimTreeToggle", key = "Space + e" },
+            { desc = "🔍 Find Files", group = "Label", action = "Telescope find_files", key = "ff" },
+            { desc = "💾 Save File", group = "Label", action = "w", key = "Ctrl + s" },
+            { desc = "🗑️ Close Buffer", group = "Label", action = "bd", key = "Space + c" },
+            { desc = "🖱️ Select All", group = "Label", action = "ggVG", key = "Ctrl + a" },
             { desc = "🚪 Quit", group = "Label", action = "qa", key = "q" },
           },
           mru = { limit = 0, enable = false }, -- Отключаем Recent Files
