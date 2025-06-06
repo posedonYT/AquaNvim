@@ -7,8 +7,8 @@ vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to Right Window" })
 vim.keymap.set("n", "<C-Left>", "<C-w>h", { desc = "Move to Left Window" })
 vim.keymap.set("n", "<C-Right>", "<C-w>l", { desc = "Move to Right Window" })
 
--- Закрытие окна
-vim.keymap.set("n", "<leader>c", "<C-w>c", { desc = "Close Window" })
+-- Закрытие буфера
+vim.keymap.set("n", "<leader>c", "<cmd>bd<CR>", { desc = "Close Buffer" })
 
 -- Сохранение файла
 vim.keymap.set("n", "<C-s>", "<cmd>w<CR>", { desc = "Save File" })

@@ -16,7 +16,7 @@ return {
       })
 
       local lspconfig = require("lspconfig")
-      for _, server in ipairs({ "lua_ls", "typescript-language-server", "pyright", "rust_analyzer", "vtsls" }) do
+      for _, server in ipairs({ "lua_ls", "ts_ls", "pyright", "rust_analyzer", "vtsls" }) do
         lspconfig[server].setup({})
       end
     end
