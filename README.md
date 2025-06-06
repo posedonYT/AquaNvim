@@ -40,4 +40,6 @@ nvim
 
 If you have selected a section of code, you can comment out the line by pressing ``` / ``` as it is implemented in the IDE.
 
+![commentation](https://github.com/posedonYT/AquaNvim/issues/1#issue-3125428896)
+
 
