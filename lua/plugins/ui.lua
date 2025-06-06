@@ -61,7 +61,7 @@ return {
                     " / ___ \\ (_| | |_| | (_| | |__| (_) | (_| |  __/",
                     "/_/   \\_\\__, |\\__,_|\\__,_|\\____\\___/ \\__,_|\\___|",
                     "           |_|                                 ",
-                    "                    AquaCode                   ",
+                    "                    AquaNvim                   ",
                   },
           shortcut = {
             { desc = "📂 File Explorer", group = "Label", action = "NvimTreeToggle", key = "Space + e" },
