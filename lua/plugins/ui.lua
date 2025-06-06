@@ -82,4 +82,14 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = true,
   },
+  {
+  "windwp/nvim-autopairs",
+  event = "InsertEnter",
+  config = function()
+    require("nvim-autopairs").setup({
+      disable_filetype = { "TelescopePrompt", "spectre_panel" },
+      fast_wrap = {}, -- Автоматический выбор при быстром наборе
+    })
+    end
+  }
 }
