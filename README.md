@@ -1,6 +1,6 @@
 # 🌊AquaNvim
 
-![AquaNvim](https://i.ibb.co/cKW6QWrb/2025-06-06-170250-hyprshot.png)
+![AquaNvim](https://i.ibb.co/spwqQJYc/2025-06-11-182330-hyprshot.png)
 
 ## Install 
 
