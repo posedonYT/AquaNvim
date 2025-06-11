@@ -7,8 +7,16 @@ vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to Right Window" })
 vim.keymap.set("n", "<C-Left>", "<C-w>h", { desc = "Move to Left Window" })
 vim.keymap.set("n", "<C-Right>", "<C-w>l", { desc = "Move to Right Window" })
 
--- Закрытие буфера
-vim.keymap.set("n", "<leader>c", "<cmd>bd<CR>", { desc = "Close Buffer" })
+-- Закрытие буфера с переходом на предыдущий
+vim.keymap.set("n", "<leader>c", function()
+    local current_buf = vim.api.nvim_get_current_buf()
+    vim.cmd("silent! bp")   -- Пытаемся перейти на предыдущий буфер (без ошибки если невозможно)
+    if vim.api.nvim_get_current_buf() == current_buf then
+        vim.cmd("bd")       -- Если остались в том же буфере (начало списка) - просто закрываем
+    else
+        vim.cmd("bd " .. current_buf)  -- Закрываем исходный буфер после перехода
+    end
+end, { desc = "Close Buffer and switch to previous" })
 
 -- Сохранение файла
 vim.keymap.set("n", "<C-s>", "<cmd>w<CR>", { desc = "Save File" })
@@ -35,28 +43,21 @@ vim.keymap.set("v", "<Right>", "l", { desc = "Move Right" })
 
 -- Комментирование/раскомментирование выделенных строк по нажатию /
 vim.keymap.set("v", "/", function()
-    -- Повторно выделяем визуальную область для корректного определения меток
     vim.cmd("normal! gv")
-
-    -- Проверяем, что находимся в строчном визуальном режиме
     local mode = vim.fn.visualmode()
     if mode ~= "V" then
         vim.notify("Комментирование поддерживается только в строчном визуальном режиме (Shift + V)", vim.log.levels.WARN)
         return
     end
 
-    -- Получаем диапазон выделенных строк
-    local start_line = vim.fn.line("'<") - 1  -- 0-based
-    local end_line = vim.fn.line("'>")        -- 1-based, inclusive
-
-    -- Проверка валидности диапазона
+    local start_line = vim.fn.line("'<") - 1
+    local end_line = vim.fn.line("'>")
     local total_lines = vim.api.nvim_buf_line_count(0)
     if start_line < 0 or end_line > total_lines or start_line >= end_line then
         vim.notify("Недопустимый или пустой диапазон выделения: start=" .. start_line .. ", end=" .. end_line, vim.log.levels.ERROR)
         return
     end
 
-    -- Получаем тип файла
     local filetype = vim.api.nvim_buf_get_option(0, "filetype")
     local comment_map = {
         lua = "-- ",
@@ -69,14 +70,12 @@ vim.keymap.set("v", "/", function()
     }
     local comment_str = comment_map[filetype] or "# "
 
-    -- Получаем строки в диапазоне
     local lines = vim.api.nvim_buf_get_lines(0, start_line, end_line, false)
     if not lines or #lines == 0 then
         vim.notify("В выделении нет строк", vim.log.levels.ERROR)
         return
     end
 
-    -- Проверяем, все ли строки уже закомментированы
     local all_commented = true
     for _, line in ipairs(lines) do
         if not line:match("^%s*" .. vim.pesc(comment_str)) then
@@ -85,18 +84,14 @@ vim.keymap.set("v", "/", function()
         end
     end
 
-    -- Обрабатываем строки
     for i = 1, #lines do
         if all_commented then
-            -- Удаляем комментарий (убираем comment_str из начала строки, сохраняя пробелы)
             lines[i] = lines[i]:gsub("^(%s*)" .. vim.pesc(comment_str), "%1")
         else
-            -- Добавляем комментарий в начало строки
             lines[i] = comment_str .. (lines[i] or "")
         end
     end
 
-    -- Обновляем буфер
     local success, err = pcall(function()
         vim.api.nvim_buf_set_lines(0, start_line, end_line, false, lines)
     end)
@@ -105,7 +100,6 @@ vim.keymap.set("v", "/", function()
         return
     end
 
-    -- Восстанавливаем строчное визуальное выделение
     local line_count = end_line - start_line
     if line_count > 0 then
         vim.api.nvim_command("normal! " .. (start_line + 1) .. "GV" .. (line_count - 1) .. "j")
@@ -113,3 +107,8 @@ vim.keymap.set("v", "/", function()
         vim.api.nvim_command("normal! " .. (start_line + 1) .. "GV")
     end
 end, { desc = "Comment or uncomment selected lines" })
+
+vim.keymap.set("n", "<leader>n", function()
+  local api = require("nvim-tree.api")
+  api.fs.create()
+end, { desc = "Создать файл в nvim-tree" })
