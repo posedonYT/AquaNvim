@@ -1,23 +1,16 @@
 return {
   {
-    "rebelot/kanagawa.nvim",
-    priority = 1000,
-    config = function()
-      require("kanagawa").setup({
-        colors = {
-          theme = {
-            all = {
-              ui = {
-                bg_gutter = "none",
-              }
-            }
-          }
-        }
-      })
-      vim.cmd.colorscheme("kanagawa")
+  "folke/tokyonight.nvim",
+  priority = 1000,
+  config = function()
+    require("tokyonight").setup({
+        style = "storm",
+        transparent = false,
+    })
+    vim.cmd.colorscheme("tokyonight-storm")
     end
-  },
-  {
+    },
+    {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()

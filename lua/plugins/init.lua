@@ -26,5 +26,6 @@ vim.list_extend(plugins, safe_require("plugins.ui"))
 vim.list_extend(plugins, safe_require("plugins.lsp"))
 vim.list_extend(plugins, safe_require("plugins.completion"))
 vim.list_extend(plugins, safe_require("plugins.treesitter"))
+vim.list_extend(plugins, safe_require("plugins.rust"))
 
 require("lazy").setup(plugins)
