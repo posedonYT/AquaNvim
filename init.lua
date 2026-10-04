@@ -1,10 +1,6 @@
+-- ≋≋≋ AquaNvim ≋≋≋
+-- Точка входа. Вся логика живёт в lua/aqua, пользовательские плагины — в lua/custom/plugins.
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-require("options")
-require("keymap")
-require("plugins")
-require("config.cmp")
-require("config.lspconfig")
-require('config.nvim-tree')
-require('config.lualine')
+require("aqua").setup()

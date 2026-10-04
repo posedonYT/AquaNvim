@@ -1,0 +1,17 @@
+{
+  "extras": [
+    "ai.claudecode",
+    "coding.surround",
+    "lang.docker",
+    "lang.go",
+    "lang.json",
+    "lang.markdown",
+    "lang.prisma",
+    "lang.python",
+    "lang.rust",
+    "lang.sql",
+    "lang.typescript",
+    "lang.web"
+  ],
+  "version": 1
+}
