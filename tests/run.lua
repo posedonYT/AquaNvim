@@ -273,6 +273,10 @@ local function run()
     end)
   end)
 
+  dofile(vim.fn.stdpath("config") .. "/tests/ai.lua")({
+    describe = describe, it = it, eq = eq, ok = ok, wait = wait, tmp = tmp, real = real,
+  })
+
   describe("Explorer", function()
     it("Snacks Explorer открывается слева в корне проекта", function()
       vim.cmd("only")

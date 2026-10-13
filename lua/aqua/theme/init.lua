@@ -132,6 +132,23 @@ function M.on_highlights(hl, c)
   hl.AquaClaudeBar = { fg = p.abyss, bg = p.sunset, bold = true }
   hl.AquaClaudeDir = { fg = p.sand, bg = p.trench, italic = true }
 
+  -- Aqua AI: чат, ввод, подтверждения
+  hl.AquaAINormal = { fg = p.foam, bg = p.abyss }
+  hl.AquaAIInput = { fg = p.foam, bg = p.trench }
+  hl.AquaAIBar = { fg = p.abyss, bg = p.turquoise, bold = true }
+  hl.AquaAIInfo = { fg = p.ice, bg = p.trench, italic = true }
+  hl.AquaAIStatus = { fg = p.sand, bg = p.abyss, bold = true }
+  hl.AquaAIHint = { fg = p.drift, bg = p.trench, italic = true }
+  hl.AquaAIUser = { fg = p.sunset, bold = true }
+  hl.AquaAIBot = { fg = p.turquoise, bold = true }
+  hl.AquaAITool = { fg = p.mist, italic = true }
+  hl.AquaAIErr = { fg = p.coral }
+  hl.AquaAIQueued = { fg = p.sand, italic = true }
+  hl.AquaAIPrompt = { fg = p.foam, bg = p.abyss }
+  hl.AquaAIPromptBorder = { fg = p.sand, bg = p.abyss }
+  hl.AquaAIPromptTitle = { fg = p.abyss, bg = p.sand, bold = true }
+  hl.AquaAIPromptKeys = { fg = p.turquoise, bg = p.trench, bold = true }
+
   -- Bufferline / lualine fallback
   hl.TabLineSel = { fg = p.turquoise, bg = p.deep, bold = true }
 

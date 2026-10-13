@@ -154,6 +154,21 @@ map("n", "<leader>ad", claude("send_diagnostics"), { desc = "Send Line Diagnosti
 map("n", "<leader>ap", claude("select"), { desc = "Pick Claude Instance" })
 map("n", "<leader>ak", claude("kill"), { desc = "Kill Claude (Root)" })
 
+-- ── Aqua AI (собственный агент с локальной моделью) ─────────────────────────
+local ai = function(fn)
+  return function() require("aqua.ai")[fn]() end
+end
+map("n", "<leader>o", ai("toggle"), { desc = "Aqua AI (Project Root)" })
+map("n", "<leader>aon", ai("new_chat"), { desc = "New Chat" })
+map("n", "<leader>aom", ai("select_model"), { desc = "Select Model" })
+map("n", "<leader>aop", ai("select_profile"), { desc = "Select Profile" })
+map("n", "<leader>aof", ai("send_file"), { desc = "Add Current File" })
+map("x", "<leader>aos", function() require("aqua.ai").send_selection() end, { desc = "Send Selection" })
+map("n", "<leader>aod", ai("send_diagnostics"), { desc = "Send Line Diagnostics" })
+map("n", "<leader>aoc", ai("cancel"), { desc = "Cancel Generation" })
+map("n", "<leader>aoy", ai("toggle_yolo"), { desc = "Toggle YOLO (no confirmations)" })
+map("n", "<leader>aot", ai("tools_info"), { desc = "Show Tools & Permissions" })
+
 -- ── Терминал ────────────────────────────────────────────────────────────────
 map({ "n", "t" }, "<C-/>", function() Snacks.terminal(nil, { cwd = root.get() }) end, { desc = "Terminal (Root Dir)" })
 map({ "n", "t" }, "<C-_>", function() Snacks.terminal(nil, { cwd = root.get() }) end, { desc = "which_key_ignore" })

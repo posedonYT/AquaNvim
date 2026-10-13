@@ -82,9 +82,9 @@ return {
             },
             {
               function()
-                local cwd = vim.b.aqua_claude_cwd
-                if cwd then
-                  return "󰚩 Claude · " .. vim.fn.fnamemodify(cwd, ":~")
+                local agent = vim.b.aqua_agent
+                if agent then
+                  return agent.icon .. " " .. agent.name .. " · " .. vim.fn.fnamemodify(agent.cwd, ":~")
                 end
                 return "\u{f120} " .. vim.fn.fnamemodify(vim.fn.getcwd(), ":~")
               end,
@@ -96,6 +96,10 @@ return {
             {
               function() return require("aqua.claude").status() end,
               color = { fg = p.sunset, gui = "bold" },
+            },
+            {
+              function() return require("aqua.ai").status() end,
+              color = { fg = p.turquoise, gui = "bold" },
             },
             {
               function() return require("noice").api.status.mode.get() end,

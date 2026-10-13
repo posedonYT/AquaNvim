@@ -3,6 +3,7 @@ return {
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
+    opts_extend = { "spec" },
     opts = {
       preset = "helix",
       delay = 250,
@@ -18,6 +19,8 @@ return {
           { "<leader>a", group = "ai / claude", icon = { icon = "󰚩", color = "orange" } },
           { "<leader>b", group = "buffer", expand = function() return require("which-key.extras").expand.buf() end },
           { "<leader>c", icon = { icon = "󰚩", color = "orange" } },
+          { "<leader>o", icon = { icon = "󰧑", color = "cyan" } },
+          { "<leader>ao", group = "aqua ai (local model)", icon = { icon = "󰧑", color = "cyan" } },
           { "<leader>d", group = "debug" },
           { "<leader>f", group = "file/find" },
           { "<leader>g", group = "git" },

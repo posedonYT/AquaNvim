@@ -35,6 +35,21 @@ local function has_custom_plugins()
   return false
 end
 
+--- Пользовательские настройки: lua/custom/options.lua (необязательный файл).
+--- Выполняется после встроенных опций и до загрузки плагинов — здесь удобно
+--- задавать vim.g.aqua_* и vim.opt.*. В тестах не загружается.
+function M.load_custom_options()
+  if M.headless_test then
+    return
+  end
+  local ok, err = pcall(require, "custom.options")
+  if not ok and not tostring(err):find("module 'custom.options' not found", 1, true) then
+    vim.schedule(function()
+      vim.notify("lua/custom/options.lua: " .. tostring(err), vim.log.levels.ERROR, { title = "AquaNvim" })
+    end)
+  end
+end
+
 function M.spec()
   local spec = { { import = "aqua.plugins" } }
   vim.list_extend(spec, require("aqua.extras").spec())
@@ -46,6 +61,7 @@ end
 
 function M.setup()
   require("aqua.config.options")
+  M.load_custom_options()
   if not bootstrap_lazy() then
     return
   end
@@ -75,6 +91,7 @@ function M.setup()
   })
 
   require("aqua.extras").create_command()
+  require("aqua.ai").create_command()
 end
 
 return M
