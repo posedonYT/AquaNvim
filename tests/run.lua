@@ -277,6 +277,10 @@ local function run()
     describe = describe, it = it, eq = eq, ok = ok, wait = wait, tmp = tmp, real = real,
   })
 
+  dofile(vim.fn.stdpath("config") .. "/tests/ai_stack.lua")({
+    describe = describe, it = it, eq = eq, ok = ok, wait = wait, tmp = tmp, real = real,
+  })
+
   describe("Explorer", function()
     it("Snacks Explorer открывается слева в корне проекта", function()
       vim.cmd("only")
@@ -421,6 +425,10 @@ local function run()
       end
     end)
   end)
+
+  dofile(vim.fn.stdpath("config") .. "/tests/reader.lua")({
+    describe = describe, it = it, eq = eq, ok = ok, wait = wait, tmp = tmp, real = real,
+  })
 
   -- ── Итог ────────────────────────────────────────────────────────────────
   print(("\n≋≋≋ %d passed, %d failed ≋≋≋"):format(results.passed, results.failed))

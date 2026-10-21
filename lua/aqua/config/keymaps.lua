@@ -168,6 +168,9 @@ map("n", "<leader>aod", ai("send_diagnostics"), { desc = "Send Line Diagnostics"
 map("n", "<leader>aoc", ai("cancel"), { desc = "Cancel Generation" })
 map("n", "<leader>aoy", ai("toggle_yolo"), { desc = "Toggle YOLO (no confirmations)" })
 map("n", "<leader>aot", ai("tools_info"), { desc = "Show Tools & Permissions" })
+map("n", "<leader>aoS", ai("show_stack"), { desc = "Project Stack" })
+map("n", "<leader>aoK", ai("knowledge_picker"), { desc = "Version Notes (knowledge)" })
+map("n", "<leader>aoR", function() require("aqua.ai").research(true) end, { desc = "Re-research Stack Docs" })
 
 -- ── Терминал ────────────────────────────────────────────────────────────────
 map({ "n", "t" }, "<C-/>", function() Snacks.terminal(nil, { cwd = root.get() }) end, { desc = "Terminal (Root Dir)" })

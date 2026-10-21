@@ -35,6 +35,7 @@ return {
           { "<leader>e", icon = { icon = "󰙅", color = "cyan" } },
           { "<leader>E", icon = { icon = "󰙅", color = "cyan" } },
           { "<leader>n", icon = { icon = "󰝒", color = "green" } },
+          { "<leader>m", group = "markdown", icon = { icon = "󰍔", color = "cyan" } },
           { "[", group = "prev" },
           { "]", group = "next" },
           { "g", group = "goto" },

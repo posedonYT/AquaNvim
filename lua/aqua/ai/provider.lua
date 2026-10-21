@@ -15,6 +15,32 @@ local function edict(t)
   return t
 end
 
+--- JSON Schema для отправки: пустые таблицы Lua кодируются как массив `[]`, а серверам
+--- (Ollama и др.) нужен объект `{}` — иначе весь запрос отклоняется с ошибкой 400.
+local OBJECT_KEYS = { properties = true, ["$defs"] = true, definitions = true, patternProperties = true }
+local function fix_schema(schema)
+  if type(schema) ~= "table" then
+    return schema
+  end
+  local out = {}
+  for k, v in pairs(schema) do
+    if OBJECT_KEYS[k] and type(v) == "table" then
+      local props = {}
+      for pk, pv in pairs(v) do props[pk] = fix_schema(pv) end
+      out[k] = next(props) == nil and vim.empty_dict() or props
+    elseif type(v) == "table" then
+      out[k] = fix_schema(v)
+    else
+      out[k] = v
+    end
+  end
+  if out.type == "object" and out.properties == nil then
+    out.properties = vim.empty_dict()
+  end
+  return out
+end
+M.fix_schema = fix_schema
+
 --- Схемы инструментов в формате function-calling (одинаковы для обоих провайдеров).
 ---@param tools { name: string, description: string, parameters: table }[]
 function M.tool_schemas(tools)
@@ -22,7 +48,7 @@ function M.tool_schemas(tools)
   for _, t in ipairs(tools) do
     out[#out + 1] = {
       type = "function",
-      ["function"] = { name = t.name, description = t.description, parameters = t.parameters },
+      ["function"] = { name = t.name, description = t.description, parameters = fix_schema(t.parameters) },
     }
   end
   return out

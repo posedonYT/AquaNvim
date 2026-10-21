@@ -23,7 +23,22 @@ M.defaults = {
     },
   },
   --- Права инструментов: "allow" | "ask" | "deny".
-  permissions = { read = "allow", write = "ask", delete = "ask", web = "ask" },
+  ---   docs — официальная документация (только домены из knowledge.official_domains)
+  ---   exec — проверка компилятором (check_project: go build/vet/test, cargo check, tsc...)
+  permissions = { read = "allow", write = "ask", delete = "ask", web = "ask", docs = "allow", exec = "ask" },
+  --- Знания о версиях стека
+  knowledge = {
+    auto = true, -- изучать заметки о выпуске версий стека перед первым запросом в проекте (один раз на версию)
+    prompt_chars = 2500, -- бюджет оглавлений заметок в системном промпте
+    stack_chars = 1500, -- бюджет сводки стека в системном промпте
+    max_chars = 16000, -- максимум текста, который lookup_docs возвращает за раз
+    official_domains = nil, -- nil → список из aqua/ai/knowledge/sources.lua
+    sources = {}, -- переопределение URL: { go = "https://.../go{v}", npm = "...{name}@{v}..." }
+  },
+  check = {
+    timeout = 120, -- секунд на check_project
+    require_after_edit = true, -- если модель изменила код и не проверила — один раз напомнить вызвать check_project
+  },
   max_steps = 30, -- максимум обращений к модели за один запрос пользователя
   context_chars = 60000, -- бюджет истории (символы); старые результаты инструментов сжимаются
   timeout = 600, -- секунд на один ответ модели
@@ -33,10 +48,8 @@ M.defaults = {
   allow_private_web = false, -- разрешить web_fetch к localhost / локальной сети
   instructions_files = { "AQUA.md", "AGENTS.md", "CLAUDE.md" }, -- проектные инструкции для модели
   system_prompt = nil, -- дополнительный текст к системному промпту
-  width = 0.4,
-  input_height = 4, -- минимальная высота поля ввода (растёт с текстом)
+  width = 0.4, -- ширина чата-терминала (доля экрана, минимум 40 колонок)
   persist = true, -- сохранять историю чата по проектам
-  input_vim_mode = false, -- false: поле ввода как в Claude Code CLI (всегда режим вставки); true: обычный Vim
 }
 
 ---@class aqua.ai.Profile

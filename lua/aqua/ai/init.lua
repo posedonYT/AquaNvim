@@ -3,7 +3,7 @@
 -- чтение / создание / изменение / перемещение / удаление файлов и папок в проекте,
 -- поиск по проекту, поиск в интернете, работа с Markdown по разделам.
 --
---   Space o   — открыть/скрыть чат справа (в корне проекта текущего файла)
+--   Space o   — открыть/скрыть чат-терминал справа (в корне проекта текущего файла)
 --   :AquaAI   — команды (model, profile, new, yolo, tools, ...)
 local config = require("aqua.ai.config")
 local root_util = require("aqua.util.root")
@@ -185,16 +185,104 @@ function M.tools_info()
   notify(table.concat(lines, "\n"))
 end
 
+-- ── Стек и знания о версиях ─────────────────────────────────────────────────
+
+--- Отчёт о стеке текущего проекта (текст).
+function M.stack_report()
+  local stack = require("aqua.ai.stack")
+  local st = stack.detect(M.root())
+  local kn = require("aqua.ai.knowledge")
+  local _, cfg = config.profile()
+  local lines = { "# Стек проекта: " .. vim.fn.fnamemodify(st.root, ":~"), "", stack.report(st) }
+  local targets = stack.targets(st)
+  if #targets > 0 then
+    lines[#lines + 1] = "## Заметки о версиях"
+    for _, t in ipairs(targets) do
+      local info = kn.language_info(t.lang, t.version, cfg)
+      local cached = info and vim.fn.filereadable(info.path) == 1
+      lines[#lines + 1] = ("- %s: %s"):format(t.label, cached and ("изучено (" .. info.url .. ")") or "ещё не изучено — :AquaAI research")
+    end
+  end
+  return table.concat(lines, "\n")
+end
+
+--- Показать стек в окне.
+function M.show_stack()
+  local text = M.stack_report()
+  Snacks.win({
+    text = vim.split(text, "\n", { plain = true }),
+    ft = "markdown",
+    width = 0.7,
+    height = 0.7,
+    border = "rounded",
+    title = " 󰙅 Стек проекта · Aqua AI ",
+    title_pos = "center",
+    wo = { wrap = true, conceallevel = 2, spell = false },
+    keys = { q = "close" },
+  })
+  return text
+end
+
+--- Сохранённые заметки о версиях (открываются как Markdown — работает режим чтения Space m r).
+function M.knowledge_picker()
+  local kn = require("aqua.ai.knowledge")
+  if #kn.list() == 0 then
+    return notify("Заметок пока нет. Они появятся после первого запроса в проекте или по :AquaAI research")
+  end
+  Snacks.picker.files({ cwd = kn.dir(), title = "󰂺 Заметки о версиях стека" })
+end
+
+--- Изучить (заново) документацию версий стека текущего проекта.
+---@param force? boolean перезагрузить, даже если уже в кэше
+---@param cb? fun(results: table[])
+function M.research(force, cb)
+  local stack = require("aqua.ai.stack")
+  local kn = require("aqua.ai.knowledge")
+  local _, cfg = config.profile()
+  local targets = stack.targets(stack.detect(M.root()))
+  if #targets == 0 then
+    notify("В проекте не найдено манифестов с версиями (go.mod, package.json, pyproject.toml, Cargo.toml, CMakeLists.txt)")
+    return cb and cb({})
+  end
+  local results, i = {}, 0
+  local function nxt()
+    i = i + 1
+    local t = targets[i]
+    if not t then
+      local lines = vim.tbl_map(function(r) return (r.ok and "✓ " or "✗ ") .. r.label .. (r.err and (": " .. r.err) or "") end, results)
+      notify("Изучение стека:\n" .. table.concat(lines, "\n"))
+      return cb and cb(results)
+    end
+    notify("Изучаю " .. t.label .. "…")
+    kn.ensure_language(t.lang, t.version, cfg, function(body, err)
+      results[#results + 1] = { label = t.label, ok = body ~= nil, err = err }
+      nxt()
+    end, force ~= false)
+  end
+  nxt()
+end
+
+--- Подсказка по клавишам и командам (Markdown).
+function M.help_text()
+  return table.concat({
+    "## Клавиши чата",
+    "- `Enter` — отправить · `Shift+Enter` / `Alt+Enter` / `Ctrl-J` / `\\` + `Enter` — новая строка",
+    "- Пока модель отвечает, можно писать дальше: сообщения встают в очередь (⏳)",
+    "- `Esc` / `Ctrl-C` — остановить ответ и очистить очередь · `Ctrl-C` без ответа — очистить ввод",
+    "- `Esc Esc` — режим Normal: прокрутка, поиск, копирование, `gf` — открыть файл; `i` — снова ввод",
+    "- `Ctrl-H` / `Ctrl-K` / `Ctrl-W …` — перейти в другое окно · `Ctrl-,` или `Space o` — скрыть чат",
+    "- `↑` / `↓` — история · `Ctrl-A` / `Ctrl-E` / `Ctrl-K` / `Ctrl-U` / `Alt-B` / `Alt-F` — как в терминале",
+    "",
+    "## Команды",
+    "- `/new` — новый чат · `/model` — модель · `/profile` — профиль · `/yolo` — без подтверждений",
+    "- `/stack` — стек проекта · `/research` — заново изучить версии · `/knowledge` — заметки о версиях",
+    "- `/tools` — инструменты и права · `/stop` — прервать · `/exit` — закрыть окно чата · `Tab` — дополнить команду",
+    "- `@путь` — ссылка на файл проекта (`Space a o f` добавляет текущий)",
+  }, "\n")
+end
+
 function M.help()
-  notify(table.concat({
-    "Space o — чат · Enter — отправить · Shift+Enter (или Ctrl-J, или \\ + Enter) — новая строка",
-    "Пока модель отвечает, можно писать дальше: сообщения встают в очередь (⏳) и подхватываются",
-    "на ближайшем шаге. Esc / Ctrl-C — остановить ответ и очистить очередь (Esc Esc — очистить ввод)",
-    "Ctrl-, — скрыть чат · ↑/↓ — история · Ctrl-A/E/K/W — как в терминале",
-    "/new  — новый чат      /model  — выбрать модель     /profile — профиль",
-    "/yolo — без подтверждений   /tools — инструменты    /stop — прервать",
-    "@путь — ссылка на файл проекта (Space a o f добавляет текущий)",
-  }, "\n"))
+  notify(M.help_text())
 end
 
 --- Для lualine.
@@ -203,7 +291,7 @@ function M.status()
 end
 
 function M.create_command()
-  local subs = { "toggle", "open", "hide", "new", "model", "profile", "stop", "yolo", "tools", "help" }
+  local subs = { "toggle", "open", "hide", "new", "model", "profile", "stop", "yolo", "tools", "help", "stack", "knowledge", "research" }
   vim.api.nvim_create_user_command("AquaAI", function(c)
     local sub, rest = c.fargs[1] or "toggle", table.concat(vim.list_slice(c.fargs, 2), " ")
     if sub == "toggle" then M.toggle()
@@ -217,6 +305,9 @@ function M.create_command()
     elseif sub == "yolo" then M.toggle_yolo()
     elseif sub == "tools" then M.tools_info()
     elseif sub == "help" then M.help()
+    elseif sub == "stack" then M.show_stack()
+    elseif sub == "knowledge" then M.knowledge_picker()
+    elseif sub == "research" then M.research(true)
     else notify("Неизвестная подкоманда. Доступно: " .. table.concat(subs, ", "), vim.log.levels.WARN) end
   end, {
     nargs = "*",

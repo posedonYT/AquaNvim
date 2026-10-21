@@ -83,6 +83,36 @@ local function curl(args, cb, stdin)
   end)
 end
 
+--- Загрузка URL (общая для web_fetch и базы знаний).
+---@param url string
+---@param opts? { fail?: boolean, max_bytes?: integer, timeout?: integer, headers?: string[] }
+---@param cb fun(body?: string, err?: string)
+function M.fetch(url, opts, cb)
+  opts = opts or {}
+  local args = { "--max-time", tostring(opts.timeout or 30), "--max-filesize", tostring(opts.max_bytes or 8000000) }
+  if opts.fail then
+    table.insert(args, "--fail")
+  end
+  for _, h in ipairs(opts.headers or {}) do
+    vim.list_extend(args, { "-H", h })
+  end
+  table.insert(args, url)
+  local cmd = { "curl", "-sS", "-L", "--connect-timeout", "8", "-A", UA }
+  vim.list_extend(cmd, args)
+  vim.system(cmd, { text = true }, function(res)
+    vim.schedule(function()
+      if res.code == 22 then
+        return cb(nil, "HTTP-ошибка (страница не найдена или недоступна): " .. url)
+      elseif res.code == 63 then
+        return cb(nil, "Страница слишком большая: " .. url)
+      elseif res.code ~= 0 then
+        return cb(nil, "Ошибка сети: " .. vim.trim(res.stderr or ("curl " .. res.code)))
+      end
+      cb(res.stdout or "")
+    end)
+  end)
+end
+
 local function urlencode(s)
   return (s:gsub("[^%w%-_%.~]", function(c) return ("%%%02X"):format(c:byte()) end))
 end

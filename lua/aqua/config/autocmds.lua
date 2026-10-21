@@ -64,6 +64,18 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Markdown: режим чтения ⇄ редактирование и оглавление
+vim.api.nvim_create_autocmd("FileType", {
+  group = augroup("markdown_keys"),
+  pattern = "markdown",
+  callback = function(ev)
+    vim.keymap.set("n", "<leader>mr", function() require("aqua.reader").toggle() end,
+      { buffer = ev.buf, desc = "Reading Mode (toggle)" })
+    vim.keymap.set("n", "<leader>mo", function() require("aqua.reader").outline() end,
+      { buffer = ev.buf, desc = "Outline" })
+  end,
+})
+
 -- Перенос и орфография для текста
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("wrap_spell"),

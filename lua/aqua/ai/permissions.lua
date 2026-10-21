@@ -17,11 +17,9 @@ function M.user_is_typing()
   if uv.now() - M.last_key < 1500 then
     return true
   end
-  local buf = vim.api.nvim_get_current_buf()
-  if vim.bo[buf].filetype == "aqua_ai_input" then
-    return table.concat(vim.api.nvim_buf_get_lines(buf, 0, -1, false), ""):match("%S") ~= nil
-  end
-  return false
+  local root = vim.b[vim.api.nvim_get_current_buf()].aqua_ai_root
+  local st = root and package.loaded["aqua.ai.ui"] and require("aqua.ai.ui").states[root]
+  return st ~= nil and st.ed.text:match("%S") ~= nil
 end
 
 --- Переопределяемый обработчик (для тестов и пользовательских сценариев):
@@ -29,7 +27,10 @@ end
 ---@type fun(category: string, info: table, cb: fun(decision: string))|nil
 M.handler = nil
 
-local CATEGORY_NAMES = { write = "изменение файлов", delete = "удаление", web = "интернет", read = "чтение" }
+local CATEGORY_NAMES = {
+  write = "изменение файлов", delete = "удаление", web = "интернет", read = "чтение",
+  docs = "официальная документация", exec = "проверка компилятором",
+}
 
 ---@param category string
 ---@param info { title: string, diff?: string }
@@ -135,9 +136,9 @@ local function prompt(category, info, cb, ctx)
     end
     if vim.api.nvim_win_is_valid(prev) then
       pcall(vim.api.nvim_set_current_win, prev)
-      -- вернулись в поле ввода — можно сразу продолжать печатать
-      if vim.bo[vim.api.nvim_win_get_buf(prev)].filetype == "aqua_ai_input" then
-        vim.schedule(function() vim.cmd.startinsert({ bang = true }) end)
+      -- вернулись в чат — можно сразу продолжать печатать
+      if vim.bo[vim.api.nvim_win_get_buf(prev)].filetype == "aqua_ai" then
+        vim.schedule(function() vim.cmd.startinsert() end)
       end
     end
     cb(decision)

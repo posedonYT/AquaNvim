@@ -2,6 +2,8 @@
   "extras": [
     "ai.claudecode",
     "coding.surround",
+    "lang.bash",
+    "lang.c",
     "lang.docker",
     "lang.go",
     "lang.json",
@@ -10,8 +12,10 @@
     "lang.python",
     "lang.rust",
     "lang.sql",
+    "lang.tailwind",
     "lang.typescript",
-    "lang.web"
+    "lang.web",
+    "lang.yaml"
   ],
   "version": 1
 }

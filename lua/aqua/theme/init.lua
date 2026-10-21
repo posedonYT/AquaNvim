@@ -132,18 +132,51 @@ function M.on_highlights(hl, c)
   hl.AquaClaudeBar = { fg = p.abyss, bg = p.sunset, bold = true }
   hl.AquaClaudeDir = { fg = p.sand, bg = p.trench, italic = true }
 
-  -- Aqua AI: чат, ввод, подтверждения
+  -- Режим чтения Markdown
+  hl.AquaReaderNormal = { fg = p.foam, bg = p.deep }
+  hl.AquaReaderBar = { fg = p.abyss, bg = p.turquoise, bold = true }
+  hl.AquaReaderHint = { fg = p.drift, bg = p.deep, italic = true }
+
+  -- Aqua AI: чат-терминал (цвета превращаются в ANSI), winbar, подтверждения
   hl.AquaAINormal = { fg = p.foam, bg = p.abyss }
-  hl.AquaAIInput = { fg = p.foam, bg = p.trench }
   hl.AquaAIBar = { fg = p.abyss, bg = p.turquoise, bold = true }
   hl.AquaAIInfo = { fg = p.ice, bg = p.trench, italic = true }
   hl.AquaAIStatus = { fg = p.sand, bg = p.abyss, bold = true }
-  hl.AquaAIHint = { fg = p.drift, bg = p.trench, italic = true }
+  hl.AquaAIText = { fg = p.foam }
+  hl.AquaAITitle = { fg = p.turquoise, bold = true }
+  hl.AquaAIDim = { fg = p.drift }
+  hl.AquaAIMuted = { fg = p.mist }
   hl.AquaAIUser = { fg = p.sunset, bold = true }
+  hl.AquaAIUserMark = { fg = p.sunset, bold = true }
+  hl.AquaAIUserText = { fg = p.foam }
+  hl.AquaAIUserBg = { bg = p.trench }
   hl.AquaAIBot = { fg = p.turquoise, bold = true }
+  hl.AquaAIH1 = { fg = p.turquoise, bold = true, underline = true }
+  hl.AquaAIH2 = { fg = p.wave, bold = true }
+  hl.AquaAIH3 = { fg = p.lagoon, bold = true }
+  hl.AquaAIBullet = { fg = p.lagoon }
+  hl.AquaAIQuote = { fg = p.mist, italic = true }
+  hl.AquaAIQuoteBar = { fg = p.reef }
+  hl.AquaAILink = { fg = p.wave, underline = true }
+  hl.AquaAICodeInline = { fg = p.sand, bg = p.trench }
+  hl.AquaAICode = { bg = p.deep }
+  hl.AquaAICodeText = { fg = p.spray }
+  hl.AquaAICodeLabel = { fg = p.drift, italic = true }
   hl.AquaAITool = { fg = p.mist, italic = true }
+  hl.AquaAIToolName = { fg = p.foam, bold = true }
+  hl.AquaAIOk = { fg = p.kelp, bold = true }
   hl.AquaAIErr = { fg = p.coral }
+  hl.AquaAIWarn = { fg = p.sand }
+  hl.AquaAISpinner = { fg = p.turquoise, bold = true }
+  hl.AquaAIStatusText = { fg = p.sand }
   hl.AquaAIQueued = { fg = p.sand, italic = true }
+  hl.AquaAIBox = { fg = p.lagoon }
+  hl.AquaAIBoxBusy = { fg = p.sand }
+  hl.AquaAIBoxDim = { fg = p.reef }
+  hl.AquaAIPromptChar = { fg = p.turquoise, bold = true }
+  hl.AquaAIPlaceholder = { fg = p.drift, italic = true }
+  hl.AquaAICmd = { fg = p.turquoise }
+  hl.AquaAIHintText = { fg = p.drift }
   hl.AquaAIPrompt = { fg = p.foam, bg = p.abyss }
   hl.AquaAIPromptBorder = { fg = p.sand, bg = p.abyss }
   hl.AquaAIPromptTitle = { fg = p.abyss, bg = p.sand, bold = true }

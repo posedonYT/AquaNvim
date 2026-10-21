@@ -1,4 +1,5 @@
--- desc: Markdown: marksman, красивый рендер прямо в буфере, markdownlint
+-- desc: Markdown: marksman (LSP, ссылки между файлами) и markdownlint (проверка стиля)
+-- Красивый рендер и режим чтения (Space m r) входят в ядро AquaNvim.
 return {
   {
     "nvim-treesitter/nvim-treesitter",
@@ -11,18 +12,10 @@ return {
   { "mason-org/mason.nvim", opts = { ensure_installed = { "markdownlint-cli2" } } },
   {
     "mfussenegger/nvim-lint",
-    opts = { linters_by_ft = { markdown = { "markdownlint-cli2" } } },
-  },
-  {
-    "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown" },
     opts = {
-      code = { sign = false, width = "block", right_pad = 1 },
-      heading = { sign = false, icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " } },
-      checkbox = { enabled = true },
-    },
-    keys = {
-      { "<leader>um", function() require("render-markdown").toggle() end, desc = "Toggle Markdown Render", ft = "markdown" },
+      linters_by_ft = { markdown = { "markdownlint-cli2" } },
+      -- Замечания по стилю (длина строки и т. п.) не засоряют текст: остаются знаком на полях и в <leader>sd
+      diagnostics = { ["markdownlint-cli2"] = { virtual_text = false, underline = false } },
     },
   },
 }

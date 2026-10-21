@@ -21,7 +21,7 @@ local function register(tool)
   M.by_name[tool.name] = tool
 end
 
-for _, mod in ipairs({ "aqua.ai.tools.fs", "aqua.ai.tools.md", "aqua.ai.tools.web" }) do
+for _, mod in ipairs({ "aqua.ai.tools.fs", "aqua.ai.tools.md", "aqua.ai.tools.web", "aqua.ai.tools.stack" }) do
   for _, tool in ipairs(require(mod).tools) do
     register(tool)
   end

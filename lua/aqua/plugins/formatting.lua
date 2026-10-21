@@ -24,10 +24,14 @@ return {
   {
     "mfussenegger/nvim-lint",
     event = { "BufReadPost", "BufNewFile", "BufWritePost" },
-    opts = { linters_by_ft = {} },
+    opts = { linters_by_ft = {}, diagnostics = {} },
     config = function(_, opts)
       local lint = require("lint")
       lint.linters_by_ft = opts.linters_by_ft
+      -- Настройки отображения диагностик отдельных линтеров (например, без virtual text)
+      for name, conf in pairs(opts.diagnostics or {}) do
+        vim.diagnostic.config(conf, lint.get_namespace(name))
+      end
       vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost", "InsertLeave" }, {
         group = vim.api.nvim_create_augroup("aqua_lint", { clear = true }),
         callback = function()
